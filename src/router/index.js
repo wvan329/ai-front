@@ -1,12 +1,11 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
-import TalkRoom from '@/views/TalkRoom.vue'
-import File from '@/views/File.vue' // 你刚创建的那个组件
+import Chat from '@/views/Chat.vue'
+
 
 const routes = [
-  { path: '/', redirect: '/talk' },
-  { path: '/talk', component: TalkRoom },
-  { path: '/file', component: File },
+  { path: '/', redirect: '/chat' },
+  { path: '/chat', component: Chat },
 ]
 
 const router = createRouter({
