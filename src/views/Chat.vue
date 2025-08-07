@@ -51,15 +51,12 @@ async function sendMessage() {
   userInput.value = ''
 
   // 发起请求（流式处理 Flux<String>）
-  const response = await fetch('https://a.wgk-fun.top/ai-api/ai/chat', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      sessionId: sessionId.value,
-      message: input,
-    }),
+  const url = new URL('https://a.wgk-fun.top/ai-api/ai/chat')
+  url.searchParams.append('user', sessionId.value)
+  url.searchParams.append('prompt', input)
+
+  const response = await fetch(url, {
+    method: 'GET',
   })
 
   if (!response.body) {
@@ -89,6 +86,7 @@ async function sendMessage() {
   width: 500px;
   margin: 0 auto;
 }
+
 .messages {
   height: 300px;
   border: 1px solid #ddd;
@@ -97,17 +95,21 @@ async function sendMessage() {
   margin-bottom: 10px;
   background: #f9f9f9;
 }
+
 .message {
   margin-bottom: 8px;
 }
+
 .input-area {
   display: flex;
   gap: 8px;
 }
+
 input {
   flex: 1;
   padding: 8px;
 }
+
 button {
   padding: 8px 16px;
 }
