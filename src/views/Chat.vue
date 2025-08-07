@@ -51,7 +51,7 @@ async function sendMessage() {
   userInput.value = ''
 
   // 发起请求（流式处理 Flux<String>）
-  const response = await fetch('http://a.wgk-fun.top/ai-api/ai/chat', {
+  const response = await fetch('https://a.wgk-fun.top/ai-api/ai/chat', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
