@@ -1,18 +1,27 @@
 <template>
-  <div>
-    <div v-if="!sessionId">
-      <button @click="startChat">开始对话</button>
+  <div class="chat-wrapper">
+    <div v-if="!sessionId" class="start-screen">
+      <button class="start-button" @click="startChat">开始对话</button>
     </div>
 
     <div v-else class="chat-container">
-      <div class="messages">
-        <div v-for="(msg, index) in messages" :key="index" class="message">
-          <strong>{{ msg.role }}：</strong> {{ msg.content }}
+      <div class="messages" ref="messageList">
+        <div
+          v-for="(msg, index) in messages"
+          :key="index"
+          class="message-bubble"
+          :class="msg.role === '用户' ? 'user' : 'ai'"
+        >
+          <div class="bubble-content">{{ msg.content }}</div>
         </div>
       </div>
 
       <div class="input-area">
-        <input v-model="userInput" @keyup.enter="sendMessage" placeholder="请输入内容..." />
+        <input
+          v-model="userInput"
+          @keyup.enter="sendMessage"
+          placeholder="请输入内容..."
+        />
         <button @click="sendMessage">发送</button>
       </div>
     </div>
@@ -83,35 +92,122 @@ async function sendMessage() {
 </script>
 
 <style scoped>
+.chat-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+  background-color: #f5f5f5;
+}
+
+.start-screen {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+}
+
+.start-button {
+  padding: 12px 24px;
+  font-size: 16px;
+  border: none;
+  background-color: orange;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
 .chat-container {
-  width: 500px;
-  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .messages {
-  height: 300px;
-  border: 1px solid #ddd;
+  flex: 1;
   padding: 10px;
   overflow-y: auto;
-  margin-bottom: 10px;
-  background: #f9f9f9;
 }
 
-.message {
-  margin-bottom: 8px;
+.message-bubble {
+  display: flex;
+  margin-bottom: 10px;
+  max-width: 80%;
+  word-wrap: break-word;
+}
+
+.message-bubble.user {
+  justify-content: flex-end;
+}
+
+.message-bubble.ai {
+  justify-content: flex-start;
+}
+
+.bubble-content {
+  padding: 10px 14px;
+  border-radius: 16px;
+  line-height: 1.4;
+  font-size: 14px;
+  background-color: #e5e7eb;
+}
+
+.message-bubble.user .bubble-content {
+  background-color: lightcoral;
+  color: white;
+  border-bottom-right-radius: 2px;
+}
+
+.message-bubble.ai .bubble-content {
+  background-color: #e5e7eb;
+  color: #111827;
+  border-bottom-left-radius: 2px;
 }
 
 .input-area {
   display: flex;
-  gap: 8px;
+  padding: 10px;
+  background-color: white;
+  border-top: 1px solid #ddd;
 }
 
 input {
   flex: 1;
-  padding: 8px;
+  padding: 10px;
+  font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  outline: none;
 }
 
 button {
-  padding: 8px 16px;
+  margin-left: 8px;
+  padding: 0 16px;
+  font-size: 14px;
+  border: none;
+  background-color: skyblue;
+  color: white;
+  border-radius: 20px;
+  cursor: pointer;
+}
+
+/* 移动端适配 */
+@media (max-width: 600px) {
+  .chat-wrapper {
+    height: 100dvh;
+  }
+
+  .bubble-content {
+    font-size: 15px;
+  }
+
+  input {
+    font-size: 16px;
+  }
+
+  button {
+    font-size: 16px;
+  }
 }
 </style>
+
