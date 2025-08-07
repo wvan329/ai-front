@@ -21,6 +21,8 @@
 
 <script setup>
 import { ref } from 'vue'
+import { reactive } from 'vue'
+
 
 // UUID生成函数
 function generateUUID() {
@@ -50,7 +52,6 @@ async function sendMessage() {
   messages.value.push({ role: '用户', content: input })
   userInput.value = ''
 
-  // 发起请求（流式处理 Flux<String>）
   const url = new URL('https://a.wgk-fun.top/ai-api/ai/chat')
   url.searchParams.append('user', sessionId.value)
   url.searchParams.append('prompt', input)
@@ -68,7 +69,7 @@ async function sendMessage() {
   const reader = response.body.getReader()
   const decoder = new TextDecoder('utf-8')
   let botMsg = ''
-  const botMessage = { role: 'AI', content: '' }
+  const botMessage = reactive({ role: 'AI', content: '' }) // ✅ 使其响应式
   messages.value.push(botMessage)
 
   while (true) {
@@ -76,7 +77,7 @@ async function sendMessage() {
     if (done) break
     const chunk = decoder.decode(value, { stream: true })
     botMsg += chunk
-    botMessage.content = botMsg
+    botMessage.content = botMsg // ✅ 页面现在能实时更新
   }
 }
 </script>
