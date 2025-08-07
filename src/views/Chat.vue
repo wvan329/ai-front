@@ -132,16 +132,20 @@ async function sendMessage() {
 .message-bubble {
   display: flex;
   margin-bottom: 10px;
-  max-width: 80%;
+  max-width: 95%; /* ✅ 从 80% 改成 95% */
   word-wrap: break-word;
 }
 
 .message-bubble.user {
   justify-content: flex-end;
+  margin-left: auto;
+  margin-right: 8px; /* ✅ 靠右边小一点 */
 }
 
 .message-bubble.ai {
   justify-content: flex-start;
+  margin-right: auto;
+  margin-left: 8px; /* ✅ 靠左边小一点 */
 }
 
 .bubble-content {
