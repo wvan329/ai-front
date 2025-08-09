@@ -69,10 +69,6 @@ async function playStrokes(id) {
 
     // 朗读当前字
     await speak(char.value)
-    for (const word of relatedWords.value) {
-      await speak(word)
-      await new Promise(resolve => setTimeout(resolve, 1000))
-    }
 
     writer.value.hideCharacter()
 
