@@ -120,7 +120,9 @@ async function playStrokes(id) {
     // 朗读当前字
     await speak(char.value)
     for (const w of words.value) {
-      await speak(w)
+      if (id === animationId.value) {
+        await speak(w)
+      }
     }
 
     writer.value.hideCharacter()
