@@ -109,7 +109,8 @@ async function refreshChar() {
 
   HanziWriter.loadCharacterData(char.value).then(charData => {
     strokes = charData.strokes
-    playStrokes(currentId)
+    playStrokes1(currentId)
+    playStrokes2(currentId)
   })
 }
 function speak(text) {
@@ -120,7 +121,7 @@ function speak(text) {
 
   })
 }
-async function playStrokes(id) {
+async function playStrokes1(id) {
   while (id === animationId.value) {
 
     // 朗读当前字
@@ -130,7 +131,11 @@ async function playStrokes(id) {
         await speak(w)
       }
     }
+  }
+}
 
+async function playStrokes2(id) {
+  while (id === animationId.value) {
     writer.value.hideCharacter()
 
     for (let i = 0; i < strokes.length; i++) {
