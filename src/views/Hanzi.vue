@@ -50,9 +50,19 @@ function refreshChar() {
     playStrokes(currentId)
   })
 }
-
+function speak(text) {
+  return new Promise(resolve => {
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.onend = resolve
+    speechSynthesis.speak(utterance)
+  })
+}
 async function playStrokes(id) {
   while (id === animationId.value) {
+
+    // 朗读当前字
+    await speak(char.value)
+
     writer.value.hideCharacter()
 
     for (let i = 0; i < strokes.length; i++) {
@@ -91,7 +101,7 @@ async function playStrokes(id) {
   font-weight: 700;
   color: #2c3e50;
   font-family: 'Noto Serif SC', serif;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .refresh-btn {
@@ -104,7 +114,7 @@ async function playStrokes(id) {
   border-radius: 30px;
   color: white;
   cursor: pointer;
-  box-shadow: 0 6px 12px rgba(64,158,255,0.5);
+  box-shadow: 0 6px 12px rgba(64, 158, 255, 0.5);
   transition: background-color 0.3s ease;
 }
 
