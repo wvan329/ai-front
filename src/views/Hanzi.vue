@@ -2,6 +2,7 @@
   <div class="app">
     <div ref="writerContainer" class="writer"></div>
     <div v-if="char" class="pinyin">{{ pinyinText }}</div>
+    <div v-if="char" v-for="word in words" class="pinyin">{{ word }}</div>
     <button @click="refreshChar" class="refresh-btn">刷新汉字</button>
   </div>
 </template>
@@ -10,6 +11,7 @@
 import { ref } from 'vue'
 import HanziWriter from 'hanzi-writer'
 import pinyin from 'pinyin'
+import axios from 'axios'
 
 // 常用汉字列表（这里用一小段，你可以换成更全的）
 // 你也可以安装 common-chinese-characters 包，或者从网上找大字库
@@ -20,19 +22,73 @@ const pinyinText = ref('')
 const animationId = ref(0)
 let strokes = []
 let char = ref('')
+let words = ref([])
 
 const getRandomChar = () => {
   const idx = Math.floor(Math.random() * commonChars.length)
   return commonChars[idx]
 }
 
-function refreshChar() {
+
+function fetchBaiduSuggestions(char) {
+  return new Promise(resolve => {
+    const cbName = `cb_${Date.now()}`
+    window[cbName] = function (data) {
+      if (data && data.s) {
+        resolve(data.s.filter(w => w.includes(char)))
+      } else {
+        resolve([])
+      }
+      delete window[cbName]
+    }
+    const script = document.createElement('script')
+    script.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${encodeURIComponent(char)}&cb=${cbName}`
+    document.body.appendChild(script)
+    script.onload = () => document.body.removeChild(script)
+  })
+}
+
+async function refreshChar() {
   char.value = getRandomChar()
   animationId.value++
   const currentId = animationId.value
 
   const py = pinyin(char.value, { style: pinyin.STYLE_TONE })
   pinyinText.value = py.length > 0 ? py[0][0] : ''
+
+
+  fetchBaiduSuggestions(char.value).then(a => {
+    const excludePatterns = [
+      /拼音/,
+      /什么/,
+      /作用/,
+      /功效/,
+      /组词/,
+      /拼音/,
+      /作用/,
+      /功效/,
+      /意思/,
+      /解释/,
+      /怎么/,
+      /啥/,
+      /笔顺/,
+      /性/,
+      / /,
+      /的/
+
+    ]
+    words.value = a.filter(word => {
+      if (word.length < 2 || word.length > 7) return false
+      for (const pattern of excludePatterns) {
+        // 含英文字母或数字
+        if (/[a-zA-Z0-9]/.test(word)) return false
+        if (pattern.test(word)) return false
+      }
+      return true
+    })
+    words.value = words.value.slice(0, 3)
+
+  })
 
   if (writerContainer.value) {
     writerContainer.value.innerHTML = ''
@@ -55,6 +111,7 @@ function speak(text) {
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.onend = resolve
     speechSynthesis.speak(utterance)
+
   })
 }
 async function playStrokes(id) {
@@ -62,6 +119,9 @@ async function playStrokes(id) {
 
     // 朗读当前字
     await speak(char.value)
+    for (const w of words.value) {
+      await speak(w)
+    }
 
     writer.value.hideCharacter()
 
