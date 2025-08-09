@@ -62,20 +62,21 @@ async function sendMessage() {
   messages.value.push({ role: '用户', content: input })
   userInput.value = ''
 
-  const response = await axios.get('https://a.wgk-fun.top/ai-api/ai/chat', {
-    params: {
-      user: sessionId.value,
-      prompt: input
-    }
-  });
+  const url = new URL('https://a.wgk-fun.top/ai-api/ai/chat')
+  url.searchParams.append('user', sessionId.value)
+  url.searchParams.append('prompt', input)
 
-  if (!response.data) {
+  const response = await fetch(url, {
+    method: 'GET',
+  })
+
+  if (!response.body) {
     console.error('响应无内容')
     return
   }
 
   // 流式读取响应
-  const reader = response.data.getReader()
+  const reader = response.body.getReader()
   const decoder = new TextDecoder('utf-8')
   let botMsg = ''
   const botMessage = reactive({ role: 'AI', content: '' }) // ✅ 使其响应式
