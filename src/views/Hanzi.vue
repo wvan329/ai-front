@@ -78,7 +78,7 @@ async function refreshChar() {
 
     ]
     words.value = a.filter(word => {
-      if (word.length < 2 || word.length > 7) return false
+      if (word.length < 2 || word.length > 5) return false
       for (const pattern of excludePatterns) {
         // 含英文字母或数字
         if (/[a-zA-Z0-9]/.test(word)) return false
