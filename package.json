@@ -9,9 +9,6 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "chinese-lexicon": "^1.0.43",
-    "hanzi": "^2.1.5",
-    "hanzi-util": "^3.2.6",
     "hanzi-writer": "^3.7.2",
     "hanzi-writer-data": "^2.0.1",
     "js-sha256": "^0.11.1",
