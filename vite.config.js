@@ -16,7 +16,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/ai-api': {
-        target: 'http://localhost', // 你的后端地址（或容器地址）
+        target: 'http://localhost:8080', // 你的后端地址（或容器地址）
         changeOrigin: true,
         ws: true, // ✅ 开启 WebSocket 代理
         rewrite: path => path.replace(/^\/ai-api/, '')

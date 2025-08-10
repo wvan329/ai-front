@@ -30,24 +30,6 @@ const getRandomChar = () => {
 }
 
 
-function fetchBaiduSuggestions(char) {
-  return new Promise(resolve => {
-    const cbName = `cb_${Date.now()}`
-    window[cbName] = function (data) {
-      if (data && data.s) {
-        resolve(data.s.filter(w => w.includes(char)))
-      } else {
-        resolve([])
-      }
-      delete window[cbName]
-    }
-    const script = document.createElement('script')
-    script.src = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su?wd=${encodeURIComponent(char)}&cb=${cbName}`
-    document.body.appendChild(script)
-    script.onload = () => document.body.removeChild(script)
-  })
-}
-
 async function refreshChar() {
   char.value = getRandomChar()
   animationId.value++
@@ -56,45 +38,12 @@ async function refreshChar() {
   const py = pinyin(char.value, { style: pinyin.STYLE_TONE })
   pinyinText.value = py.length > 0 ? py[0][0] : ''
 
-  const response = await axios.get('https://a.wgk-fun.top/ai-api/word/getWords', {
+  const response = await axios.get('/ai-api/word/getWords', {
     params: {
       word: char.value
     }
   });
   words.value = response.data.data;
-
-  // fetchBaiduSuggestions(char.value).then(a => {
-  //   const excludePatterns = [
-  //     /拼音/,
-  //     /什么/,
-  //     /作用/,
-  //     /功效/,
-  //     /组词/,
-  //     /拼音/,
-  //     /作用/,
-  //     /功效/,
-  //     /意思/,
-  //     /解释/,
-  //     /怎么/,
-  //     /啥/,
-  //     /笔顺/,
-  //     /性/,
-  //     / /,
-  //     /的/
-
-  //   ]
-  //   words.value = a.filter(word => {
-  //     if (word.length < 2 || word.length > 5) return false
-  //     for (const pattern of excludePatterns) {
-  //       // 含英文字母或数字
-  //       if (/[a-zA-Z0-9]/.test(word)) return false
-  //       if (pattern.test(word)) return false
-  //     }
-  //     return true
-  //   })
-  //   words.value = words.value.slice(0, 3)
-
-  // })
 
   if (writerContainer.value) {
     writerContainer.value.innerHTML = ''
@@ -131,13 +80,13 @@ async function playStrokes1(id) {
         await speak(w)
       }
     }
+    await new Promise(resolve => setTimeout(resolve, 2000))
   }
 }
 
 async function playStrokes2(id) {
   while (id === animationId.value) {
     writer.value.hideCharacter()
-
     for (let i = 0; i < strokes.length; i++) {
       if (id !== animationId.value) return
       await new Promise(resolve => {
