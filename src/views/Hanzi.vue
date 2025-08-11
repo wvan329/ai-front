@@ -33,6 +33,19 @@ const getRandomChar = () => {
 
 
 async function refreshChar() {
+  if (writerContainer.value) {
+    writerContainer.value.innerHTML = ''
+  }
+
+  // 如果之前有音频，先暂停并释放
+  if (audio.value) {
+    audio.value.pause()
+    audio.value.src = ''
+    audio.value = null
+  }
+
+  words.value = []
+
   char.value = getRandomChar()
   animationId.value++
   const currentId = animationId.value
@@ -47,13 +60,6 @@ async function refreshChar() {
   });
   words.value = response.data.data.text.slice(1);
 
-  // 如果之前有音频，先暂停并释放
-  if (audio.value) {
-    audio.value.pause()
-    audio.value.src = ''
-    audio.value = null
-  }
-
   // 创建新的Audio对象赋值给audio ref
   audio.value = new Audio("/ai-api/" + response.data.data.url)
   audio.value.preload = 'auto'
@@ -63,10 +69,6 @@ async function refreshChar() {
       audio.value.play()
     }, 2000)
   })
-
-  if (writerContainer.value) {
-    writerContainer.value.innerHTML = ''
-  }
 
   writer.value = HanziWriter.create(writerContainer.value, char.value, {
     width: 400,
