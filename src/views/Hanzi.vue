@@ -2,7 +2,7 @@
   <div class="app">
     <div ref="writerContainer" class="writer"></div>
     <div v-if="char" class="pinyin">{{ pinyinText }}</div>
-    <div v-if="char" v-for="word in words" class="pinyin">{{ word }}</div>
+    <div v-if="char" v-for="word in words" class="words">{{ word }}</div>
     <button @click="refreshChar" class="refresh-btn">刷新汉字</button>
   </div>
 </template>
@@ -22,6 +22,7 @@ const pinyinText = ref('')
 const animationId = ref(0)
 let strokes = []
 let char = ref('')
+// let words = ref(["她倾听着窗外的雨声，心情渐渐平静下来。", "他倾尽全力完成了这项艰巨的任务。", "夕阳西下，金色的光芒倾洒在湖面上，美不胜收。"])
 let words = ref([])
 const audio = ref(null)
 
@@ -44,7 +45,7 @@ async function refreshChar() {
       word: char.value
     }
   });
-  words.value = response.data.data.text;
+  words.value = response.data.data.text.slice(1);
 
   // 如果之前有音频，先暂停并释放
   if (audio.value) {
@@ -122,26 +123,31 @@ async function playStrokes2(id) {
 <style>
 .app {
   text-align: center;
-  padding: 20px;
+  padding: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
 .writer {
-  margin-top: 20px;
   width: 400px;
   height: 400px;
-  /* border: 2px solid #666; */
-  /* border-radius: 8px; */
-  /* box-shadow: 0 4px 10px rgba(0,0,0,0.1); */
-  /* background-color: #fafafa; */
 }
 
 .pinyin {
   margin-top: 20px;
   font-size: 3.5rem;
   font-weight: 700;
+  color: #2c3e50;
+  font-family: 'Noto Serif SC', serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.words {
+  text-align: left;
+  margin-top: 10px;
+  font-size: 2rem;
+  font-weight: 400;
   color: #2c3e50;
   font-family: 'Noto Serif SC', serif;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
