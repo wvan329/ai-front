@@ -23,6 +23,7 @@ const animationId = ref(0)
 let strokes = []
 let char = ref('')
 let words = ref([])
+const audio = ref(null)
 
 const getRandomChar = () => {
   const idx = Math.floor(Math.random() * commonChars.length)
@@ -38,12 +39,29 @@ async function refreshChar() {
   const py = pinyin(char.value, { style: pinyin.STYLE_TONE })
   pinyinText.value = py.length > 0 ? py[0][0] : ''
 
-  const response = await axios.get('/ai-api/word/getWords', {
+  const response = await axios.get('/ai-api/ai/getWords', {
     params: {
       word: char.value
     }
   });
-  words.value = response.data.data;
+  words.value = response.data.data.text;
+
+  // 如果之前有音频，先暂停并释放
+  if (audio.value) {
+    audio.value.pause()
+    audio.value.src = ''
+    audio.value = null
+  }
+
+  // 创建新的Audio对象赋值给audio ref
+  audio.value = new Audio("/ai-api/" + response.data.data.url)
+  audio.value.preload = 'auto'
+
+  audio.value.addEventListener('ended', () => {
+    setTimeout(() => {
+      audio.value.play()
+    }, 2000)
+  })
 
   if (writerContainer.value) {
     writerContainer.value.innerHTML = ''
@@ -58,9 +76,12 @@ async function refreshChar() {
 
   HanziWriter.loadCharacterData(char.value).then(charData => {
     strokes = charData.strokes
-    playStrokes1(currentId)
+    // playStrokes1(currentId)
     playStrokes2(currentId)
   })
+
+  audio.value.play()
+
 }
 function speak(text) {
   return new Promise(resolve => {
