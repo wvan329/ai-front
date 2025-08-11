@@ -21,9 +21,9 @@ const writer = ref(null)
 const pinyinText = ref('')
 const animationId = ref(0)
 let strokes = []
-let char = ref('')
+let char = ref('1')
 // let words = ref(["她倾听着窗外的雨声，心情渐渐平静下来。", "他倾尽全力完成了这项艰巨的任务。", "夕阳西下，金色的光芒倾洒在湖面上，美不胜收。"])
-let words = ref([])
+let words = ref(["这个字读作办，办理的办", "我需要去办一张银行卡。", "他正在办公室工作。", "这件事办得很顺利。"])
 const audio = ref(null)
 
 const getRandomChar = () => {
@@ -128,7 +128,15 @@ async function playStrokes2(id) {
   padding: 5px;
   display: flex;
   flex-direction: column;
-  align-items: center;
+}
+.words {
+  text-align: left;
+  margin-top: 10px;
+  font-size: 2.2rem;
+  font-weight: 400;
+  color: #2c3e50;
+  font-family: 'Noto Serif SC', serif;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
 }
 
 .writer {
@@ -140,16 +148,6 @@ async function playStrokes2(id) {
   margin-top: 10px;
   font-size: 3.5rem;
   font-weight: 700;
-  color: #2c3e50;
-  font-family: 'Noto Serif SC', serif;
-  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
-}
-
-.words {
-  text-align: left;
-  margin-top: 10px;
-  font-size: 2.3rem;
-  font-weight: 400;
   color: #2c3e50;
   font-family: 'Noto Serif SC', serif;
   text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
