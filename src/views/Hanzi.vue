@@ -21,9 +21,9 @@ const writer = ref(null)
 const pinyinText = ref('')
 const animationId = ref(0)
 let strokes = []
-let char = ref('1')
+let char = ref('')
 // let words = ref(["她倾听着窗外的雨声，心情渐渐平静下来。", "他倾尽全力完成了这项艰巨的任务。", "夕阳西下，金色的光芒倾洒在湖面上，美不胜收。"])
-let words = ref(["这个字读作办，办理的办", "我需要去办一张银行卡。", "他正在办公室工作。", "这件事办得很顺利。"])
+let words = ref([])
 const audio = ref(null)
 
 const getRandomChar = () => {
