@@ -137,7 +137,7 @@ async function playStrokes2(id) {
 }
 
 .pinyin {
-  margin-top: 20px;
+  margin-top: 10px;
   font-size: 3.5rem;
   font-weight: 700;
   color: #2c3e50;
@@ -148,7 +148,7 @@ async function playStrokes2(id) {
 .words {
   text-align: left;
   margin-top: 10px;
-  font-size: 2rem;
+  font-size: 2.3rem;
   font-weight: 400;
   color: #2c3e50;
   font-family: 'Noto Serif SC', serif;
