@@ -79,36 +79,15 @@ async function refreshChar() {
 
   HanziWriter.loadCharacterData(char.value).then(charData => {
     strokes = charData.strokes
-    // playStrokes1(currentId)
-    playStrokes2(currentId)
+    playStrokes(currentId)
   })
 
   audio.value.play()
 
 }
-function speak(text) {
-  return new Promise(resolve => {
-    const utterance = new SpeechSynthesisUtterance(text)
-    utterance.onend = resolve
-    speechSynthesis.speak(utterance)
 
-  })
-}
-async function playStrokes1(id) {
-  while (id === animationId.value) {
 
-    // 朗读当前字
-    await speak(char.value)
-    for (const w of words.value) {
-      if (id === animationId.value) {
-        await speak(w)
-      }
-    }
-    await new Promise(resolve => setTimeout(resolve, 2000))
-  }
-}
-
-async function playStrokes2(id) {
+async function playStrokes(id) {
   while (id === animationId.value) {
     writer.value.hideCharacter()
     for (let i = 0; i < strokes.length; i++) {
@@ -129,6 +108,7 @@ async function playStrokes2(id) {
   display: flex;
   flex-direction: column;
 }
+
 .words {
   text-align: left;
   margin-top: 10px;
